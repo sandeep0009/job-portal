@@ -16,6 +16,7 @@ model User{
  name String
  email String @unique
  role String
+ password String
  application Application[]
 
  createdAt   DateTime  @default(now())
