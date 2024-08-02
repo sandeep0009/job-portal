@@ -10,47 +10,44 @@ datasource db {
 }
 
 
-
-model User{
- id          String    @id @default(auto()) @map("_id") @db.ObjectId
- name String
- email String @unique
- role String
- password String
- application Application[]
-
- createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-
- 
- 
- }
-
- model  Company{
-   id          String    @id @default(auto()) @map("_id") @db.ObjectId
+model User {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
   name        String
   email       String    @unique
-  jobs        Job[]
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
- }
-
- model Job{
-    id          String    @id @default(auto()) @map("_id") @db.ObjectId
-  title       String
-  description String
-  companyId   String
-  company     Company   @relation(fields: [companyId], references: [id])
+  role        String
+  password    String
   applications Application[]
+
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
- }
+}
 
- model Application {
+
+ 
+
+model Job {
+  id              String      @id @default(auto()) @map("_id") @db.ObjectId
+  slug            String      @unique
+  title           String
+  type            String
+  locationType    String
+  location        String?
+  description     String?
+  salary          Int
+  companyName     String
+  applicationEmail String?
+  applicationUrl  String?
+  companyLogoUrl  String?
+  approved        Boolean     @default(false)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  applications    Application[]
+}
+model Application {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
-  userId      String
+  userId      String    
   user        User      @relation(fields: [userId], references: [id])
-  jobId       String
+  jobId       String   
   job         Job       @relation(fields: [jobId], references: [id])
   status      String
   createdAt   DateTime  @default(now())
