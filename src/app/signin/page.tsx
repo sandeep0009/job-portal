@@ -64,7 +64,7 @@ const page = () => {
                             className='border rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-gray-500'
                         />
                     </div>
-                    <Button type="submit" variant="secondary" className='bg-black text-white'>
+                    <Button type="submit"  className='bg-black text-white'>
                         Sign Up
                     </Button>
 

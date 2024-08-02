@@ -109,7 +109,7 @@ const Page = () => {
                         </RadioGroup>
                     </div>
 
-                    <Button type="submit" variant="secondary" className='bg-black text-white'>
+                    <Button type="submit" className='bg-black text-white'>
                         Sign Up
                     </Button>
                 </form>
