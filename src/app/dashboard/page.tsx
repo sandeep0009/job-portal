@@ -29,40 +29,61 @@ interface Job {
     locationType: string;
 }
 
-const Page = () => {
+interface Filters {
+    title: string;
+    type: string;
+    location: string;
+    remote: boolean;
+}
+
+const page = () => {
     const [jobs, setJobs] = useState<Job[]>([])
     const [totalJobs, setTotalJobs] = useState<number>(0)
-    const [modalOpen, setModalOpen] = useState(false)
+    const [modalOpen, setModalOpen] = useState<boolean>(false)
     const [jobDetails, setJobDetails] = useState<Job | null>(null)
     const [currentPage, setCurrentPage] = useState<number>(1)
     const [totalPages, setTotalPages] = useState<number>(1)
+    const [filters, setFilters] = useState<Filters>({ title: '', type: '', location: '', remote: false })
     const limit = 5 
     const router = useRouter()
     const searchParams = useSearchParams()
 
-    const fetchJobs = (page: number) => {
-        createAxiosInstance().get(`/api/get-all-jobs?page=${page}&limit=${limit}`)
-            .then((res) => {
-                if (res.status === 201) {
-                    setJobs(res.data.allJobData)
-                    setTotalJobs(res.data.totaljobs)
-                    setTotalPages(res.data.totalPages)
-                }
-            })
-            .catch((error) => console.log(error))
+    const fetchJobs = (page: number, filters: Filters) => {
+        const { title, type, location, remote } = filters;
+        console.log(filters)
+        createAxiosInstance().get(`/api/get-all-jobs`, {
+            params: {
+                page,
+                limit,
+                title,
+                type,
+                location,
+                remote
+            }
+        })
+        .then((res) => {
+            if (res.status === 201) {
+                console.log(res.data.allJobData)
+                setJobs(res.data.allJobData)
+                setTotalJobs(res.data.totaljobs)
+                setTotalPages(res.data.totalPages)
+            }
+        })
+        .catch((error) => console.log(error))
     }
 
     useEffect(() => {
         const page = Number(searchParams.get('page')) || 1
         setCurrentPage(page)
-        fetchJobs(page)
-    }, [searchParams])
+        fetchJobs(page, filters)
+    }, [searchParams, filters])
 
     const handlePageChange = (page: number) => {
         if (page > 0 && page <= totalPages) {
             router.push(`/dashboard?page=${page}`);
         }
     }
+
 
     const handleViewDetails = (id: string) => {
         createAxiosInstance()
@@ -81,6 +102,12 @@ const Page = () => {
         setJobDetails(null)
     }
 
+    const handleSearch = (filters: Filters) => {
+        setFilters(filters)
+        router.push(`/dashboard?page=1&title=${filters.title}&type=${filters.type}&location=${filters.location}&remote=${filters.remote}`);
+
+    }
+
     return (
         <div>
             <div className="container">
@@ -97,7 +124,7 @@ const Page = () => {
             <div className='p-2'>
                 <div className="flex flex-col md:flex-row gap-5 mt-2 md:justify-center">
                     <div className='w-full lg:w-64 md:w-64 lg:sticky top-0 h-fit'>
-                        <Search />
+                        <Search onSearch={handleSearch} />
                     </div>
                     <div>
                         {jobs.length > 0 ? (
@@ -126,44 +153,46 @@ const Page = () => {
                         ) : (
                             <Card className='sm:w-full lg:w-[650px] md:w-[450px] border border-slate-900'>
                                 <CardHeader>
-                                    <CardTitle>No Jobs Available</CardTitle>
+                                    <CardTitle>No Jobs Found</CardTitle>
                                 </CardHeader>
+                                <CardDescription>
+                                    <CardFooter>
+                                        <div className='px-2'>
+                                            <Button className='bg-blue-900'>Back</Button>
+                                        </div>
+                                    </CardFooter>
+                                </CardDescription>
                             </Card>
                         )}
                     </div>
                 </div>
             </div>
 
-            <div className='flex justify-center m-auto text-3xl'>
+            <div className="mt-4 flex justify-center">
                 <CustomPagination
-                    currentPage={currentPage}
                     totalPages={totalPages}
+                    currentPage={currentPage}
                     onPageChange={handlePageChange}
                 />
             </div>
 
-            {modalOpen && (
-                <Dialog open={modalOpen} onOpenChange={setModalOpen}>
-                    <DialogContent>
-                        <DialogHeader>
-                            <DialogTitle>Job Details</DialogTitle>
-                        </DialogHeader>
-                        <div className="p-4">
-                            {jobDetails ? (
-                                <div>
-                                    <h2 className="text-xl font-bold">{jobDetails.title}</h2>
-                                    <p>{jobDetails.description}</p>
-                                </div>
-                            ) : (
-                                <p>Loading...</p>
-                            )}
-                        </div>
+            <Dialog open={modalOpen} onOpenChange={setModalOpen}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>{jobDetails?.title}</DialogTitle>
+                    </DialogHeader>
+                    <div>
+                        <p>{jobDetails?.description}</p>
+                        <p><IoLocationOutline /> {jobDetails?.locationType}</p>
+                        <p><MdPayment /> {jobDetails?.salary}</p>
+                    </div>
+                    <div className="mt-4 flex justify-end">
                         <Button onClick={closeModal}>Close</Button>
-                    </DialogContent>
-                </Dialog>
-            )}
+                    </div>
+                </DialogContent>
+            </Dialog>
         </div>
     )
 }
 
-export default Page
+export default page;
