@@ -1,15 +1,18 @@
 "use client"
 import React, { useState } from 'react'
-import { signIn } from 'next-auth/react'
+import { signIn, useSession } from 'next-auth/react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
+import { useRouter } from 'next/navigation'
 
 const page = () => {
     const [formData,setFormData]=useState({
         email:'',
         password:''
     })
+    const {data:session}=useSession();
+    const router=useRouter()
 
     const handleChange=(e:React.ChangeEvent<HTMLInputElement>)=>{
         const {name,value}=e.target 
@@ -25,12 +28,15 @@ const page = () => {
             email: formData.email,
             password: formData.password
         });
+       
 
         if (res?.error) {
            
             console.error(res.error);
         } else if (res?.ok) {
-            console.log("logged in")
+           
+            session?.user.role=="job-provider"?router.push('/admin-pannel'):router.push('/dashboard')
+
         }
 
     }

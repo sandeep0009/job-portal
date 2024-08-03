@@ -5,7 +5,6 @@ import { SiSidequest } from "react-icons/si";
 
 export const Appbar = () => {
   const { data: session } = useSession()
-
   return (
     <div className="flex mx-auto max-w-5xl  justify-between m-6">
       <div>
