@@ -16,8 +16,10 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog"
-import { IoLocationOutline } from "react-icons/io5"
-import { MdPayment } from "react-icons/md"
+import CustomPagination from '@/components/CustomPagination'
+import { IoLocationOutline } from "react-icons/io5";
+import { MdPayment } from "react-icons/md";
+import { useRouter, useSearchParams } from 'next/navigation'
 
 interface Job {
     id: string;
@@ -29,24 +31,38 @@ interface Job {
 
 const Page = () => {
     const [jobs, setJobs] = useState<Job[]>([])
-    const [totalJobs, setTotalJobs] = useState<string>("")
+    const [totalJobs, setTotalJobs] = useState<number>(0)
     const [modalOpen, setModalOpen] = useState(false)
     const [jobDetails, setJobDetails] = useState<Job | null>(null)
+    const [currentPage, setCurrentPage] = useState<number>(1)
+    const [totalPages, setTotalPages] = useState<number>(1)
+    const limit = 5 
+    const router = useRouter()
+    const searchParams = useSearchParams()
 
-    const allJobDetails = () => {
-        createAxiosInstance().get('/api/get-all-jobs')
+    const fetchJobs = (page: number) => {
+        createAxiosInstance().get(`/api/get-all-jobs?page=${page}&limit=${limit}`)
             .then((res) => {
                 if (res.status === 201) {
-                    setTotalJobs(res.data.totaljobs)
                     setJobs(res.data.allJobData)
+                    setTotalJobs(res.data.totaljobs)
+                    setTotalPages(res.data.totalPages)
                 }
             })
             .catch((error) => console.log(error))
     }
 
     useEffect(() => {
-        allJobDetails()
-    }, [])
+        const page = Number(searchParams.get('page')) || 1
+        setCurrentPage(page)
+        fetchJobs(page)
+    }, [searchParams])
+
+    const handlePageChange = (page: number) => {
+        if (page > 0 && page <= totalPages) {
+            router.push(`/dashboard?page=${page}`);
+        }
+    }
 
     const handleViewDetails = (id: string) => {
         createAxiosInstance()
@@ -91,13 +107,13 @@ const Page = () => {
                                         <CardHeader>
                                             <CardTitle>{job.title}</CardTitle>
                                             <CardDescription>{job.description}</CardDescription>
-                                            <CardDescription className='flex gap-2 items-center'>
-                                                <IoLocationOutline /> {job.locationType}
-                                                <MdPayment /> {job.salary}
+                                            <CardDescription className='flex gap-2'>
+                                                <IoLocationOutline />{job.locationType}
+                                                <MdPayment />{job.salary}
                                             </CardDescription>
                                         </CardHeader>
                                         <CardFooter>
-                                            <div >
+                                            <div className='px-2'>
                                                 <Button className='bg-blue-900' onClick={() => handleViewDetails(job.id)}>View Details</Button>
                                             </div>
                                             <div className='px-2'>
@@ -117,7 +133,15 @@ const Page = () => {
                     </div>
                 </div>
             </div>
-            
+
+            <div className='flex justify-center m-auto text-3xl'>
+                <CustomPagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={handlePageChange}
+                />
+            </div>
+
             {modalOpen && (
                 <Dialog open={modalOpen} onOpenChange={setModalOpen}>
                     <DialogContent>
