@@ -107,7 +107,7 @@ const Page = () => {
                                         <CardHeader>
                                             <CardTitle>{job.title}</CardTitle>
                                             <CardDescription>{job.description}</CardDescription>
-                                            <CardDescription className='flex gap-2'>
+                                            <CardDescription className='flex gap-2 items-center'>
                                                 <IoLocationOutline />{job.locationType}
                                                 <MdPayment />{job.salary}
                                             </CardDescription>

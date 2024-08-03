@@ -7,9 +7,9 @@ export const Appbar = () => {
   const { data: session } = useSession()
 
   return (
-    <div className="flex justify-between m-2">
+    <div className="flex mx-auto max-w-5xl  justify-between m-6">
       <div>
-        <h2 className="text-xl font-bold flex px-2 items-center gap-2"><SiSidequest className="gap-2 "/>JobQuest</h2>
+        <h2 className="text-2xl font-bold flex px-2 items-center gap-2"><SiSidequest className="gap-2 "/>JobQuest</h2>
         
       </div>
       <div>
