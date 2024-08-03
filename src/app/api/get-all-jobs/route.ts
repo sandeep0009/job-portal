@@ -1,14 +1,11 @@
 import { NextResponse } from "next/server";
 import prisma from "@/utils/globalPrisma";
-import { CloudHail } from "lucide-react";
-
 export async function GET(req: Request) {
     try {
         const url = new URL(req.url);
 
         const page = parseInt(url.searchParams.get('page') || '1', 10);
-        const limit = parseInt(url.searchParams.get('limit') || '5', 10);
-
+        const limit = parseInt(url.searchParams.get('limit') || '50', 10); // Increased default limit
         const skip = (page - 1) * limit;
         const take = limit;
 
@@ -30,15 +27,22 @@ export async function GET(req: Request) {
         if (location) {
             where.locationType = location;
         }
-        if (typeof remote === 'boolean') {
+
+       
+
+        
+        if (remote && typeof remote === 'boolean') {
             where.locationType = remote ? 'Remote' : { not: 'Remote' };
         }
-        console.log(where)
+
+      
 
         const [allJobData, totaljobs] = await Promise.all([
             prisma.job.findMany({ skip, take, where }),
             prisma.job.count({ where })
         ]);
+
+        
 
         return NextResponse.json({
             message: "all jobs fetched successfully",
