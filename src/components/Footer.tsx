@@ -8,8 +8,8 @@ const Footer = () => {
       <div className="mx-auto max-w-5xl space-y-5 px-5 py-6">
         <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
           <div className="space-y-5">
-            <div className='text-2xl font-semibold'>
-              Job Quest
+            <div className='text-2xl font-bold'>
+              JobQuest
             </div>
             <div className='text-slate-500 text-sm'>
               Land to your dream job with less efforts
