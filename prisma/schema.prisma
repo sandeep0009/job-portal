@@ -16,7 +16,7 @@ model User {
   email       String    @unique
   role        String
   password    String
-  applications Application[]
+ 
 
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
@@ -35,21 +35,11 @@ model Job {
   description     String?
   salary          Int
   companyName     String
-  applicationEmail String?
+
   applicationUrl  String?
-  companyLogoUrl  String?
+
   approved        Boolean     @default(false)
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
-  applications    Application[]
-}
-model Application {
-  id          String    @id @default(auto()) @map("_id") @db.ObjectId
-  userId      String    
-  user        User      @relation(fields: [userId], references: [id])
-  jobId       String   
-  job         Job       @relation(fields: [jobId], references: [id])
-  status      String
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+ 
 }

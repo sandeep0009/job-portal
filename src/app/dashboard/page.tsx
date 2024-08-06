@@ -108,6 +108,20 @@ const page = () => {
 
     }
 
+
+    const redirectToApply=(id:string)=>{
+        createAxiosInstance()
+        .get(`/api/apply?id=${id}`)
+        .then((res)=>{
+            const url:string=res.data.applicationUrl
+            window.open(url, '_blank');
+        })
+        .catch((error)=>{
+            console.log(error)
+        })
+
+    }
+
     return (
         <div>
             <div className="container">
@@ -144,7 +158,7 @@ const page = () => {
                                                 <Button className='bg-blue-900' onClick={() => handleViewDetails(job.id)}>View Details</Button>
                                             </div>
                                             <div className='px-2'>
-                                                <Button>Apply now</Button>
+                                                <Button onClick={()=>redirectToApply(job.id)}>Apply now</Button>
                                             </div>
                                         </CardFooter>
                                     </Card>
