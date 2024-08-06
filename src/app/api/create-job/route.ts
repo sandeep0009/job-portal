@@ -1,40 +1,46 @@
 import { NextResponse } from "next/server";
 import prisma from "@/utils/globalPrisma";
 
-export async  function POST(req:Request,res:Response){
+export async function POST(req: Request) {
     try {
+        const dataToSend = await req.json();
+            
+        const {
+            slug,
+            jobTitle,
+            jobType,
+            locationType,
+            jobLocation,
+            salary,
+            description,
+            companyName,
+            approved
+        } = dataToSend;
 
-        const { slug, title, type, locationType, location, description, salary, companyName, applicationEmail, applicationUrl, companyLogoUrl, approved } = await req.json();
-
-        if (!slug || !title || !type || !locationType || !salary || !companyName) {
+       
+        if (!slug || !jobTitle || !jobType || !locationType || !jobLocation || !salary || !description || !companyName ) {
             return NextResponse.json({ message: "Missing required fields" }, { status: 400 });
         }
 
-       
-        const newData = await prisma.job.create({
+    
+        const newJob = await prisma.job.create({
             data: {
                 slug,
-                title,
-                type,
+                title: jobTitle,
+                type: jobType,
                 locationType,
-                location,
+                location: jobLocation,
+                salary: parseInt(salary),
                 description,
-                salary,
                 companyName,
-                applicationEmail,
-                applicationUrl,
-                companyLogoUrl,
-                approved: approved ?? false, 
+                approved: approved ?? false,
             }
         });
 
-       
-        return NextResponse.json(newData, { status: 201 });
+        return NextResponse.json(newJob, { status: 201 });
 
-        
     } catch (error) {
-        return NextResponse.json({message:"error while creating post route of jobs"},{status:404})
-        
+        console.error("Error creating job:", error);
+        return NextResponse.json({ message: "Error while creating job" }, { status: 500 });
     }
-
 }

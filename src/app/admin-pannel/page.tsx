@@ -1,5 +1,5 @@
 "use client";
-import { Card, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import React, { useState } from 'react'
@@ -17,15 +17,19 @@ import createAxiosInstance from '@/utils/axiosInstace';
 const page = () => {
     const [formData, setFormData] = useState({
         jobTitle: "",
-        company: "",
+        companyName: "",
         jobType: "All Type",
         locationType: "Location Type",
         jobLocation: "Job Location",
         salary: "",
         description: "",
         howToApply: "",
-        approved:true
+        approved: true
     });
+
+    const generateSlug = (title: string) => {
+        return title.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '');
+    }
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -43,19 +47,20 @@ const page = () => {
     }
 
     const handleSubmit = () => {
+        const slug = generateSlug(formData.jobTitle);
 
-        createAxiosInstance().post('/api/create-job')
-        .then((res)=>{
-            if(res.status==201){
-                console.log("created successfully")
-            }
-        })
-        .catch((error)=>{
-            console.log(error);
-            
-        })
-        
-    
+        const dataToSend = { ...formData, slug };
+
+        createAxiosInstance().post('/api/create-job', dataToSend)
+            .then((res) => {
+                if (res.status === 201) {
+                    console.log(dataToSend)
+                    console.log("created successfully")
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            })
     }
 
     return (
@@ -80,10 +85,10 @@ const page = () => {
                 </div>
                 
                 <div className='m-5'>
-                    <Label className='text-slate-800 mb-2'>Company</Label>
+                    <Label className='text-slate-800 mb-2'>Company Name</Label>
                     <Input
-                        name="company"
-                        value={formData.company}
+                        name="companyName"
+                        value={formData.companyName}
                         onChange={handleInputChange}
                         placeholder='e.g Google'
                     />
