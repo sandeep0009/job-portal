@@ -3,11 +3,11 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
 import prisma from '@/utils/globalPrisma';
 import { PrismaAdapter } from '@auth/prisma-adapter';
-import { User } from '@prisma/client';
+// import { User } from '@prisma/client';
 
-interface UserWithRole extends User {
-  role: string;
-}
+// interface UserWithRole extends User {
+//   role: string;
+// }
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma) as any, 
@@ -40,7 +40,7 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
-        return { ...user, role: user.role || 'user' } as UserWithRole;
+        return { ...user, role: user.role || 'user' };
       },
     }),
   ],

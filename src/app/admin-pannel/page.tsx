@@ -14,7 +14,7 @@ import { locations } from '@/utils/location';
 import { Textarea } from '@/components/ui/textarea';
 import createAxiosInstance from '@/utils/axiosInstace';
 
-const page = () => {
+const Page = () => {
     const [formData, setFormData] = useState({
         jobTitle: "",
         companyName: "",
@@ -185,4 +185,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Page

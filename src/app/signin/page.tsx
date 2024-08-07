@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { useRouter } from 'next/navigation'
 
-const page = () => {
+const Page = () => {
     const [formData,setFormData]=useState({
         email:'',
         password:''
@@ -81,4 +81,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Page
