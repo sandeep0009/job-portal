@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 const Page = () => {
     const [formData,setFormData]=useState({
@@ -71,8 +72,12 @@ const Page = () => {
                         />
                     </div>
                     <Button type="submit"  className='bg-black text-white'>
-                        Sign Up
+                        Sign In
                     </Button>
+
+                    <div>
+                      <span className='text-slate-600 text-sm'>  If not having Account</span> <Link href="/signup" className='text-blue-900'>Sign Up</Link>
+                    </div>
 
 </form>
 

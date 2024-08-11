@@ -35,6 +35,10 @@ const Search = ({ onSearch }: SearchProps) => {
         setRemote(checked);
     };
 
+    const handleDropdownChange = (setter: React.Dispatch<React.SetStateAction<string>>, value: string) => {
+        setter(value);
+    };
+
     const handleSearch = () => {
         onSearch({ title, type, location, remote });
     };
@@ -55,13 +59,17 @@ const Search = ({ onSearch }: SearchProps) => {
                 <Label className='block text-sm font-medium text-gray-700 mb-2'>Type</Label>
                 <DropdownMenu>
                     <DropdownMenuTrigger className="w-full px-4 py-1 text-left bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        All Type
+                        {type || "All Type"}
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="w-full">
-                        <DropdownMenuLabel>Job Types</DropdownMenuLabel>
                         <DropdownMenuSeparator />
-                        {["Full Time", "Part Time", "Contract", "Internship", "Temporary", "Volunteer"].map((type) => (
-                            <DropdownMenuItem key={type} onClick={() => setType(type)}>{type}</DropdownMenuItem>
+                        {["Full Time", "Part Time", "Contract", "Internship", "Temporary", "Volunteer"].map((jobType) => (
+                            <DropdownMenuItem 
+                                key={jobType} 
+                                onClick={() => handleDropdownChange(setType, jobType)}
+                            >
+                                {jobType}
+                            </DropdownMenuItem>
                         ))}
                     </DropdownMenuContent>
                 </DropdownMenu>
@@ -71,11 +79,16 @@ const Search = ({ onSearch }: SearchProps) => {
                 <Label className='block text-sm font-medium text-gray-700 mb-2'>Locations</Label>
                 <DropdownMenu>
                     <DropdownMenuTrigger className="w-full px-4 py-2 text-left bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        Select location
+                        {location || "Select location"}
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="max-h-60 overflow-y-auto">
                         {locations.map((item) => (
-                            <DropdownMenuItem key={item} onClick={() => setLocation(item)}>{item}</DropdownMenuItem>
+                            <DropdownMenuItem 
+                                key={item} 
+                                onClick={() => handleDropdownChange(setLocation, item)}
+                            >
+                                {item}
+                            </DropdownMenuItem>
                         ))}
                     </DropdownMenuContent>
                 </DropdownMenu>
