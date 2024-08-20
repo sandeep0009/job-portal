@@ -181,20 +181,33 @@ const JobList = () => {
             </div>
 
             <Dialog open={modalOpen} onOpenChange={setModalOpen}>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>{jobDetails?.title}</DialogTitle>
-                    </DialogHeader>
-                    <div>
-                        <p>{jobDetails?.description}</p>
-                        <p><IoLocationOutline /> {jobDetails?.locationType}</p>
-                        <p><MdPayment /> {jobDetails?.salary}</p>
-                    </div>
-                    <div className="mt-4 flex justify-end">
-                        <Button onClick={closeModal}>Close</Button>
-                    </div>
-                </DialogContent>
-            </Dialog>
+    <DialogContent className="max-w-lg p-6 bg-white rounded-lg shadow-lg">
+        <DialogHeader className="mb-4">
+            <DialogTitle className="text-2xl font-semibold text-gray-800">
+                {jobDetails?.title}
+            </DialogTitle>
+        </DialogHeader>
+        <div className="flex flex-col space-y-4">
+            <p className="text-gray-700">{jobDetails?.description}</p>
+            <div className="flex items-center space-x-2 text-gray-600">
+                <IoLocationOutline className="text-xl" />
+                <span>{jobDetails?.locationType}</span>
+            </div>
+            <div className="flex items-center space-x-2 text-gray-600">
+                <MdPayment className="text-xl" />
+                <span>{jobDetails?.salary}</span>
+            </div>
+        </div>
+        <div className="mt-6 flex justify-end">
+            <Button 
+                className="bg-black  text-white font-medium py-2 px-4 rounded-lg transition-colors duration-300"
+                onClick={closeModal}>
+                Close
+            </Button>
+        </div>
+    </DialogContent>
+</Dialog>
+
         </div>
     )
 }
